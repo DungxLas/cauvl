@@ -16,7 +16,8 @@
     "@react-native-firebase/firestore": "^14.5.1",
     "@react-native-firebase/messaging": "^14.5.1",
     "react": "17.0.2",
-    "react-native": "0.67.4"
+    "react-native": "0.67.4",
+    "react-native-button": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
