@@ -18,6 +18,18 @@ export default class LoginComponent extends Component {
             user: null,
         }
     };
+    componentDidMount() {
+        this.unsubcriber = firebase.auth().onAuthStateChanged(
+            (changedUser) => {
+                this.setState({user: changedUser})
+            }
+        )
+    }
+    componentWillUnmount() {
+        if(this.unsubcriber) {
+            this.unsubcriber()
+        }
+    }
     onAnonymousLogin = () => {
         firebase.auth().signInAnonymously()
             .then(() => {
@@ -29,6 +41,26 @@ export default class LoginComponent extends Component {
             .catch((error) => {
                 console.log(`Login failed. Error = ${error}`)
             })
+    }
+    onLogin = () => {
+        firebase.auth().signInWithEmailAndPassword(this.state.typedEmail, this.state.typedPassword)
+        .then((loggedInUser) => {
+            this.setState({user: loggedInUser})
+            console.log(`Login with user: ${JSON.stringify(loggedInUser)}`)
+        })
+        .catch((error) => {
+            console.log(`Login failed. Error = ${error}`)
+        })
+    }
+    onRegister = () => {
+        firebase.auth().createUserWithEmailAndPassword(this.state.typedEmail, this.state.typedPassword)
+        .then((loggedInUser) => {
+            this.setState({user: loggedInUser})
+            console.log(`Resgister with user: ${JSON.stringify(loggedInUser)}`)
+        })
+        .catch((error) => {
+            console.log(`Register failed. Error = ${error}`)
+        })
     }
     render() {
         return (
@@ -77,7 +109,7 @@ export default class LoginComponent extends Component {
                     autoCapitalize='none'
                     onChangeText={
                         (text) => {
-                            this.setState({typedEmail: text})
+                            this.setState({ typedEmail: text })
                         }
                     }
                 />
@@ -96,10 +128,36 @@ export default class LoginComponent extends Component {
                     secureTextEntry={true}
                     onChangeText={
                         (text) => {
-                            this.setState({typedPassword: text})
+                            this.setState({ typedPassword: text })
                         }
                     }
                 />
+                <View style={{ flexDirection: 'row' }}>
+                    <Button
+                        containerStyle={{
+                            padding: 10,
+                            margin: 10,
+                            borderRadius: 4,
+                            backgroundColor: 'green'
+                        }}
+                        style={{ fontSize: 17, color: 'white' }}
+                        onPress={this.onRegister}
+                    >
+                        Register
+                    </Button>
+                    <Button
+                        containerStyle={{
+                            padding: 10,
+                            margin: 10,
+                            borderRadius: 4,
+                            backgroundColor: 'yellow'
+                        }}
+                        style={{ fontSize: 17, color: 'white' }}
+                        onPress={this.onLogin}
+                    >
+                        Loggin
+                    </Button>
+                </View>
             </View>
         );
     }
